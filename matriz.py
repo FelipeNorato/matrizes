@@ -6,7 +6,10 @@ class Matriz(object):
         self.representacao_matriz = [[] for lista_matriz in range(1 , ordem + 1)]
         self.repr_termos = []
         self.result_x = []
-        self._value = [None, None, None]
+        self._value = [None for lista_matriz in range(1 , ordem +1)]
+
+    def verificar_matriz(self):
+        pass
 
     def set_matriz(self, **kwargs):
         """ O valor sera vinculada a uma chave em um dicionario da seguinte maneira:
@@ -16,6 +19,7 @@ class Matriz(object):
             for coluna in range(1, self.ordem +1):
                 posicao = ''.join(map(str,['a', linha, coluna]))
                 self.representacao_matriz[linha - 1].append(kwargs[posicao])
+        self.verificar_matriz()
         return self.representacao_matriz
 
     def termo_independente(self, **kwargs):
@@ -28,6 +32,12 @@ class Matriz(object):
         return self.repr_termos
 
 class Superior(Matriz):
+
+    def verificar_matriz(self):
+        for linha in range(self.ordem):
+            for posicao in range(len(self.representacao_matriz[linha])):
+                if linha > posicao and self.representacao_matriz[linha][posicao] != 0:
+                    raise MatrixError("A Matriz instanciada nao e Triangular Superior")
 
     def calcular(self):
         somatorio = 0
@@ -45,6 +55,12 @@ class Superior(Matriz):
 
 class Inferior(Matriz):
 
+    def verificar_matriz(self):
+        for linha in range(self.ordem):
+            for posicao in range(len(self.representacao_matriz[linha])):
+                if linha < posicao and self.representacao_matriz[linha][posicao] != 0:
+                    raise MatrixError("A Matriz instanciada nao e Triangular Inferior")
+
     def calcular(self):
         somatorio = 0
         for linha in range(1, self.ordem + 1):
@@ -57,4 +73,7 @@ class Inferior(Matriz):
             self.result_x.append(resultado) 
             somatorio = 0
         return self.result_x
+
+class MatrixError(Exception):
+    pass
 
