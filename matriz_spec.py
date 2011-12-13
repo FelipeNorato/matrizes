@@ -1,6 +1,6 @@
 import unittest
 from should_dsl import should
-from matriz import Matriz, Superior, Inferior, LU, MatrixError
+from matriz import Matriz, Superior, Inferior, LU, GaussJordan, MatrixError
 
 
 class TestInstanciarMatriz(unittest.TestCase):
@@ -120,3 +120,16 @@ class TestMatrizDecomposicaoLUOrdem3(unittest.TestCase):
                                                  [1.333 ,1 ,1]])
     def test_calculo_LU(self):
         self.lu.calcular() |should| equal_to([-2.994, 4.991, 0.0])
+
+class TestMatrizMetodoDeGaussJordan(unittest.TestCase):
+
+
+    def setUp(self):
+        self.gj = GaussJordan(ordem=3)
+        self.gj.termo_independente(b1=1, b2=2, b3=3)
+        self.gj.set_matriz(a11= 3, a12=2, a13= 4, 
+                           a21= 1, a22=1, a23= 2,
+                           a31= 4, a32=3, a33=-2)
+
+    def test_decompor_matriz_superior(self):
+        self.gj.calcular() |should| equal_to([-3.006, 5.008, -0.001])

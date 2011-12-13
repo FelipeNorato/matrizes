@@ -124,6 +124,26 @@ class LU(Matriz):
         matriz_u.repr_termos = matriz_l.calcular()
         return matriz_u.calcular()
 
+class GaussJordan(Matriz):
+
+    def _verificar_matriz(self):
+        pass
+
+    def calcular(self):
+        for linha in range(1, self.ordem + 1):
+            pivo = self[linha-1][linha-1]
+            if pivo != 1:
+                for coluna in range(1,self.ordem+1):
+                   self.representacao_matriz[linha-1][coluna-1] = round(float(self[linha-1][coluna-1]) / pivo,3)
+                self.repr_termos[linha-1] = round(float(self.repr_termos[linha-1]) / pivo,3)
+            for _linha in range(1, self.ordem+1):
+                if _linha != linha:
+                    m =  float(self[_linha-1][linha-1])
+                    for _coluna in range(1, self.ordem+1):
+                        self.representacao_matriz[_linha-1][_coluna-1] = round(float(self[_linha-1][_coluna-1]) - (self.representacao_matriz[linha-1][_coluna-1]* m),3)
+                    self.repr_termos[_linha-1] = round(float(self.repr_termos[_linha-1]) - self.repr_termos[linha-1]* m,3)
+        return self.repr_termos
+
 class MatrixError(Exception):
     pass
 
