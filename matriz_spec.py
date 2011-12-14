@@ -131,5 +131,5 @@ class TestMatrizMetodoDeGaussJordan(unittest.TestCase):
                            a21= 1, a22=1, a23= 2,
                            a31= 4, a32=3, a33=-2)
 
-    def test_decompor_matriz_superior(self):
-        self.gj.calcular() |should| equal_to([-3.006, 5.008, -0.001])
+    def test_decompor_matriz_por_gauss_jordan(self):
+        self.gj.calcular() |should| equal_to([-3.0, 5.0, 0.00])

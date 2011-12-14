@@ -112,14 +112,14 @@ class LU(Matriz):
                     lista_l[pos('a',linha,coluna)] = 0
         matriz_u.set_matriz(**lista_u)
         matriz_l.set_matriz(**lista_l)
-        return matriz_u.representacao_matriz,matriz_l.representacao_matriz
+        return matriz_u,matriz_l
 
 
     def calcular(self):
         matriz_u = Superior(ordem=self.ordem)
         matriz_l = Inferior(ordem=self.ordem)
-        matriz_u.representacao_matriz = self._decompor()[0]
-        matriz_l.representacao_matriz = self._decompor()[1]
+        matriz_u = self._decompor()[0]
+        matriz_l = self._decompor()[1]
         matriz_l.repr_termos = self.repr_termos
         matriz_u.repr_termos = matriz_l.calcular()
         return matriz_u.calcular()
@@ -134,15 +134,15 @@ class GaussJordan(Matriz):
             pivo = self[linha-1][linha-1]
             if pivo != 1:
                 for coluna in range(1,self.ordem+1):
-                   self.representacao_matriz[linha-1][coluna-1] = round(float(self[linha-1][coluna-1]) / pivo,3)
-                self.repr_termos[linha-1] = round(float(self.repr_termos[linha-1]) / pivo,3)
+                   self[linha-1][coluna-1] = float(self[linha-1][coluna-1]) / pivo
+                self.repr_termos[linha-1] = float(self.repr_termos[linha-1]) / pivo
             for _linha in range(1, self.ordem+1):
                 if _linha != linha:
                     m =  float(self[_linha-1][linha-1])
-                    for _coluna in range(1, self.ordem+1):
-                        self.representacao_matriz[_linha-1][_coluna-1] = round(float(self[_linha-1][_coluna-1]) - (self.representacao_matriz[linha-1][_coluna-1]* m),3)
-                    self.repr_termos[_linha-1] = round(float(self.repr_termos[_linha-1]) - self.repr_termos[linha-1]* m,3)
-        return self.repr_termos
+                    for _coluna in range(linha, self.ordem+1):
+                        self[_linha-1][_coluna-1] -= float(self[linha-1][_coluna-1]* m)
+                    self.repr_termos[_linha-1] -= float(self.repr_termos[linha-1]* m)
+        return map(lambda termo: round(termo,3),self.repr_termos)
 
 class MatrixError(Exception):
     pass
